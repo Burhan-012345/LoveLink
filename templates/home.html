@@ -1,0 +1,792 @@
+{% extends "base.html" %} {% block content %}
+<div class="intro-container">
+  <!-- Photo Gallery Section with Alternating Layout -->
+  <div class="photo-gallery-alternating">
+    <!-- Photo 1: Image Left, Text Right -->
+    <div class="photo-item left-image">
+      <div class="photo-container">
+        <img
+          src="{{ url_for('static', filename='images/partner1.jpg') }}"
+          alt="Smile"
+          class="gallery-photo"
+        />
+        <div class="photo-overlay">
+          <p class="photo-caption">Meri Muskurahat Ka Raaz 💫</p>
+        </div>
+      </div>
+      <div class="photo-text">
+        <h3>Tumhari Muskurahat</h3>
+        <p>
+          Jab tum muskurate ho, lagta hai jaise poori duniya roshan ho jati hai.
+          Tumhari har ek smile mere liye ek khwaab hai jo har pal sach lagta
+          hai.
+        </p>
+        <div class="love-quote">
+          "Tumhari har ek muskurahat mere liye ek khwaab hai 💫"
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo 2: Image Right, Text Left -->
+    <div class="photo-item right-image">
+      <div class="photo-text">
+        <h3>Saath Ke Lamhe</h3>
+        <p>
+          Har saath bita pal ek yaadgar lamha ban kar dil mein bas gaya hai.
+          Tumhare saath har pal ek khoobsurat kahani hai.
+        </p>
+        <div class="love-quote">
+          "Aapki aankhon mein maine apni poori duniya dekhi 🌍"
+        </div>
+      </div>
+      <div class="photo-container">
+        <img
+          src="{{ url_for('static', filename='images/partner2.jpg') }}"
+          alt="Together"
+          class="gallery-photo"
+        />
+        <div class="photo-overlay">
+          <p class="photo-caption">Saath Bitaye Lamhe 🌟</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo 3: Image Left, Text Right -->
+    <div class="photo-item left-image">
+      <div class="photo-container">
+        <img
+          src="{{ url_for('static', filename='images/partner3.jpg') }}"
+          alt="Special"
+          class="gallery-photo"
+        />
+        <div class="photo-overlay">
+          <p class="photo-caption">Meri Duniya Ki Rani 👑</p>
+        </div>
+      </div>
+      <div class="photo-text">
+        <h3>Meri Rani</h3>
+        <p>
+          Tum ho to meri duniya mein rang hai, tum ho to har cheez khoobsurat
+          hai. Tumhare bina sab kuch adhura sa lagta hai.
+        </p>
+        <div class="love-quote">
+          "Har pal aapke saath bitana chahta hoon 🕰️"
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo 4: Image Right, Text Left -->
+    <div class="photo-item right-image">
+      <div class="photo-text">
+        <h3>Hamesha Ke Liye</h3>
+        <p>
+          Tumhare saath bitaye har pal ko main hamesha yaad rakhunga. Ye rishta
+          sirf ek janam ka nahi, hamesha ka hai.
+        </p>
+        <div class="love-quote">
+          "Aap ho to sab kuch hai, aap na ho to kuch bhi nahi ❤️"
+        </div>
+      </div>
+      <div class="photo-container">
+        <img
+          src="{{ url_for('static', filename='images/partner4.jpg') }}"
+          alt="Memories"
+          class="gallery-photo"
+        />
+        <div class="photo-overlay">
+          <p class="photo-caption">Hamesha Ke Liye 💞</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Romantic Text Section -->
+  <div class="romantic-text-section">
+    <div class="love-messages">
+      <div class="message-bubble left">
+        <p>"Tumhari har ek muskurahat mere liye ek khwaab hai 💫"</p>
+      </div>
+      <div class="message-bubble right">
+        <p>"Aapki aankhon mein maine apni poori duniya dekhi 🌍"</p>
+      </div>
+      <div class="message-bubble left">
+        <p>"Har pal aapke saath bitana chahta hoon 🕰️"</p>
+      </div>
+      <div class="message-bubble right">
+        <p>"Aap ho to sab kuch hai, aap na ho to kuch bhi nahi ❤️"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Intro Content -->
+  <div class="intro-content">
+    <div class="heart-pulse">💖</div>
+    <h1 class="lovelock-title">LoveLock</h1>
+    <p class="tagline">"Dil se likha har letter — sirf aapke liye."</p>
+
+    <div class="personal-message">
+      <p class="hinglish-text">
+        <span class="highlight-name">[Your Partner's Name]</span>,<br />
+        Aapko dekh kar lagta hai jaise poori duniya theher si gayi ho.<br />
+        Aapki har ada, har baat, har muskurahat dil chura leti hai.<br />
+        Ye LoveLock sirf aapke liye hai — meri pyaari si koshish aapko khush
+        karne ki.
+      </p>
+    </div>
+
+    <button class="open-btn" onclick="transitionToLetters()">
+      Open LoveLock 💖
+    </button>
+
+    <!-- Quick Stats -->
+    <div class="love-stats">
+      <div class="stat-item">
+        <span class="stat-number">∞</span>
+        <span class="stat-label">Pyaar</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">24/7</span>
+        <span class="stat-label">Yaadein</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Imaandaari</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Love Notes -->
+  <div class="floating-notes">
+    <div class="love-note">Tum Mere Ho 💝</div>
+    <div class="love-note">I Love You ❤️</div>
+    <div class="love-note">You're Beautiful 🌸</div>
+    <div class="love-note">My Everything 🌟</div>
+    <div class="love-note">Always Yours 💑</div>
+  </div>
+</div>
+
+<script>
+  // Initialize animations when page loads
+  document.addEventListener("DOMContentLoaded", function () {
+    animatePhotoItems();
+    animateMessages();
+    animateLoveNotes();
+    startHeartPulse();
+
+    // Animate stats after a delay
+    setTimeout(animateStats, 1000);
+
+    // Start background music
+    const music = document.getElementById("backgroundMusic");
+    if (music) {
+      setTimeout(() => {
+        music.volume = 0.4;
+        music.play().catch((e) => console.log("Auto-play prevented"));
+      }, 1500);
+    }
+  });
+
+  // Animate photo items with staggered animation
+  function animatePhotoItems() {
+    const photoItems = document.querySelectorAll(".photo-item");
+
+    photoItems.forEach((item, index) => {
+      // Set initial state
+      anime.set(item, {
+        opacity: 0,
+        translateY: 100,
+      });
+
+      // Animate with delay
+      anime({
+        targets: item,
+        opacity: 1,
+        translateY: 0,
+        duration: 1200,
+        delay: index * 400,
+        easing: "easeOutCubic",
+      });
+    });
+  }
+
+  // Animate message bubbles
+  function animateMessages() {
+    const messages = document.querySelectorAll(".message-bubble");
+    messages.forEach((message, index) => {
+      anime({
+        targets: message,
+        opacity: [0, 1],
+        translateY: [50, 0],
+        duration: 800,
+        delay: index * 300,
+        easing: "easeOutQuad",
+      });
+    });
+  }
+
+  // Animate love notes
+  function animateLoveNotes() {
+    const notes = document.querySelectorAll(".love-note");
+    notes.forEach((note, index) => {
+      anime({
+        targets: note,
+        translateX: function () {
+          return anime.random(-100, 100);
+        },
+        translateY: [100, -100],
+        opacity: [0, 1, 0],
+        scale: [0.8, 1.2, 0.8],
+        duration: 4000,
+        delay: index * 800,
+        easing: "easeInOutQuad",
+        complete: function () {
+          // Reset and restart animation
+          note.style.transform = "translateY(100px)";
+          setTimeout(() => animateLoveNotes(), 1000);
+        },
+      });
+    });
+  }
+
+  // Heart pulse animation
+  function startHeartPulse() {
+    const heart = document.querySelector(".heart-pulse");
+    anime({
+      targets: heart,
+      scale: [1, 1.3, 1],
+      duration: 1200,
+      easing: "easeInOutQuad",
+      loop: true,
+    });
+  }
+
+  // Stats counter animation
+  function animateStats() {
+    const stats = document.querySelectorAll(".stat-number");
+    stats.forEach((stat) => {
+      anime({
+        targets: stat,
+        innerHTML: [0, stat.textContent],
+        round: 1,
+        duration: 2000,
+        easing: "easeOutQuad",
+      });
+    });
+  }
+
+  function transitionToLetters() {
+    const container = document.querySelector(".intro-container");
+    anime({
+      targets: container,
+      opacity: 0,
+      scale: 0.8,
+      rotateY: 180,
+      duration: 1200,
+      easing: "easeInOutQuad",
+      complete: function () {
+        window.location.href = "{{ url_for('letters') }}";
+      },
+    });
+  }
+
+  // Add hover effects to photo items
+  document.querySelectorAll(".photo-item").forEach((item) => {
+    item.addEventListener("mouseenter", function () {
+      anime({
+        targets: this,
+        scale: 1.02,
+        duration: 300,
+        easing: "easeOutQuad",
+      });
+    });
+
+    item.addEventListener("mouseleave", function () {
+      anime({
+        targets: this,
+        scale: 1,
+        duration: 300,
+        easing: "easeOutQuad",
+      });
+    });
+  });
+
+  // Add some interactive effects
+  document
+    .querySelector(".personal-message")
+    .addEventListener("mouseenter", function () {
+      anime({
+        targets: this,
+        scale: 1.02,
+        duration: 300,
+        easing: "easeOutQuad",
+      });
+    });
+
+  document
+    .querySelector(".personal-message")
+    .addEventListener("mouseleave", function () {
+      anime({
+        targets: this,
+        scale: 1,
+        duration: 300,
+        easing: "easeOutQuad",
+      });
+    });
+</script>
+
+<style>
+  /* Alternating Photo Gallery Styles */
+  .photo-gallery-alternating {
+    margin-bottom: 60px;
+  }
+
+  .photo-item {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 60px;
+    opacity: 0;
+  }
+
+  .photo-container {
+    position: relative;
+    flex: 1;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .gallery-photo {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    transition: all 0.5s ease;
+  }
+
+  .photo-container:hover .gallery-photo {
+    transform: scale(1.05);
+  }
+
+  .photo-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: 20px;
+    text-align: center;
+  }
+
+  .photo-caption {
+    color: white;
+    font-family: "Dancing Script", cursive;
+    font-size: 1.6em;
+    margin: 0;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .photo-text {
+    flex: 1;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  }
+
+  .photo-text h3 {
+    font-family: "Playfair Display", serif;
+    font-size: 2em;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 15px;
+  }
+
+  .photo-text p {
+    font-family: "Georgia", serif;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #7a5c7c;
+    margin-bottom: 20px;
+  }
+
+  .love-quote {
+    font-family: "Dancing Script", cursive;
+    font-size: 1.4em;
+    color: #ff6b6b;
+    font-style: italic;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    border-left: 4px solid #ff6b6b;
+  }
+
+  /* Romantic Text Section */
+  .romantic-text-section {
+    margin: 30px 0;
+  }
+
+  .love-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .message-bubble {
+    padding: 15px 20px;
+    border-radius: 25px;
+    font-family: "Dancing Script", cursive;
+    font-size: 1.3em;
+    max-width: 80%;
+    position: relative;
+    opacity: 0;
+  }
+
+  .message-bubble.left {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+  }
+
+  .message-bubble.right {
+    background: rgba(255, 255, 255, 0.9);
+    color: #7a5c7c;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+  }
+
+  .message-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  .message-bubble.left::after {
+    left: -10px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    clip-path: polygon(0 0, 100% 0, 100% 100%);
+  }
+
+  .message-bubble.right::after {
+    right: -10px;
+    background: rgba(255, 255, 255, 0.9);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  /* Personal Message */
+  .personal-message {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 20px;
+    margin: 25px 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .hinglish-text {
+    font-family: "Playfair Display", serif;
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #7a5c7c;
+    text-align: center;
+    margin: 0;
+  }
+
+  .highlight-name {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+    font-size: 1.3em;
+  }
+
+  /* Heart Pulse */
+  .heart-pulse {
+    font-size: 3em;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.5));
+  }
+
+  /* Love Stats */
+  .love-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 30px 0;
+  }
+
+  .stat-item {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .stat-number {
+    display: block;
+    font-family: "Great Vibes", cursive;
+    font-size: 2em;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    font-family: "Dancing Script", cursive;
+    font-size: 1.2em;
+    color: #7a5c7c;
+    margin-top: 5px;
+  }
+
+  /* Floating Love Notes */
+  .floating-notes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .love-note {
+    position: absolute;
+    font-family: "Dancing Script", cursive;
+    font-size: 1.4em;
+    color: #ff6b6b;
+    opacity: 0;
+    text-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+    font-weight: bold;
+  }
+
+  /* Enhanced Intro Content */
+  .intro-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 40px 30px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .intro-content::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+  }
+
+  @keyframes shine {
+    0% {
+      transform: rotate(45deg) translateX(-100%);
+    }
+    100% {
+      transform: rotate(45deg) translateX(100%);
+    }
+  }
+
+  /* Enhanced Open Button */
+  .open-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    border: none;
+    padding: 18px 50px;
+    font-size: 1.3em;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Playfair Display", serif;
+    box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .open-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
+  .open-btn:hover::before {
+    left: 100%;
+  }
+
+  .open-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 40px rgba(255, 107, 107, 0.6);
+  }
+
+  /* Responsive Design for Alternating Layout */
+  @media (max-width: 768px) {
+    .photo-item {
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .left-image,
+    .right-image {
+      flex-direction: column;
+    }
+
+    .photo-text {
+      order: 2;
+    }
+
+    .photo-container {
+      order: 1;
+    }
+
+    .gallery-photo {
+      height: 300px;
+    }
+
+    .photo-text h3 {
+      font-size: 1.6em;
+    }
+
+    .photo-text p {
+      font-size: 1em;
+    }
+
+    .love-quote {
+      font-size: 1.2em;
+    }
+
+    .love-messages {
+      margin: 0 20px;
+    }
+
+    .message-bubble {
+      font-size: 1.1em;
+      max-width: 90%;
+    }
+
+    .hinglish-text {
+      font-size: 1.1em;
+    }
+
+    .intro-content {
+      margin: 0 20px;
+      padding: 30px 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .photo-item {
+      margin-bottom: 30px;
+    }
+
+    .gallery-photo {
+      height: 250px;
+    }
+
+    .photo-text {
+      padding: 20px;
+    }
+
+    .photo-text h3 {
+      font-size: 1.4em;
+    }
+
+    .photo-caption {
+      font-size: 1.3em;
+    }
+
+    .love-stats {
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stat-item {
+      width: 120px;
+    }
+
+    .lovelock-title {
+      font-size: 3.5em;
+    }
+
+    .tagline {
+      font-size: 1.5em;
+    }
+  }
+
+  /* Enhanced button styles for all pages */
+  button {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Playfair Display", serif;
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
+  button:hover::before {
+    left: 100%;
+  }
+
+  button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(255, 107, 107, 0.5);
+  }
+</style>
+{% endblock %}

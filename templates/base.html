@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoveLock - Pure Romantic Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/barba.js/1.0.0/barba.min.js"></script>
+  </head>
+  <body>
+    <!-- Heartbeat Loader -->
+    <div class="heartbeat-loader" id="heartbeatLoader">
+      <div class="heart-pulse">💖</div>
+      <p>Loading Love...</p>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="background-gradient"></div>
+    <div class="petals-container"></div>
+    <div class="hearts-container"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor"></div>
+    <div class="cursor-trail" id="cursorTrail"></div>
+
+    <!-- Audio Player -->
+    <audio id="backgroundMusic" loop>
+      <source
+        src="{{ url_for('static', filename='music/love_theme.mp3') }}"
+        type="audio/mpeg"
+      />
+    </audio>
+
+    <!-- Music Control -->
+    <button id="musicToggle" class="music-toggle">🎵</button>
+
+    <!-- Navigation Bar -->
+    <nav class="glass-navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <span class="heart-icon">💖</span>
+          LoveLock
+        </div>
+        <div class="nav-links">
+          <a href="{{ url_for('home') }}" class="nav-link" data-barba-prevent>
+            <span class="nav-icon">🏠</span>
+            Home
+          </a>
+          <a
+            href="{{ url_for('letters') }}"
+            class="nav-link"
+            data-barba-prevent
+          >
+            <span class="nav-icon">💌</span>
+            Letters
+          </a>
+          <a href="{{ url_for('shayri') }}" class="nav-link" data-barba-prevent>
+            <span class="nav-icon">📜</span>
+            Shayri
+          </a>
+          <a href="{{ url_for('secret') }}" class="nav-link" data-barba-prevent>
+            <span class="nav-icon">🔒</span>
+            Secret
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="barba-wrapper">
+      <div class="barba-container" data-barba="container">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="romantic-footer">
+      <div class="footer-separator">
+        <svg viewBox="0 0 100 20" class="separator-svg">
+          <path
+            d="M0,10 Q25,5 50,10 T100,10"
+            fill="none"
+            stroke="rgba(255,107,107,0.3)"
+            stroke-width="2"
+          />
+          <path
+            d="M20,8 Q40,12 60,8 T100,8"
+            fill="none"
+            stroke="rgba(255,182,193,0.2)"
+            stroke-width="1"
+          />
+        </svg>
+      </div>
+
+      <div class="footer-content">
+        <div class="quote-of-day">
+          <h3>Quote of the Day 💬</h3>
+          <p id="dailyQuote">
+            "Love is composed of a single soul inhabiting two bodies." -
+            Aristotle
+          </p>
+        </div>
+
+        <div class="social-hearts">
+          <button class="social-heart" onclick="shareLove('twitter')">
+            🐦
+          </button>
+          <button class="social-heart" onclick="shareLove('instagram')">
+            📸
+          </button>
+          <button class="social-heart" onclick="shareLove('whatsapp')">
+            💬
+          </button>
+          <button class="social-heart" onclick="shareLove('copy')">📋</button>
+        </div>
+
+        <div class="footer-message">
+          <p>Made with 💖 for my forever love</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Romantic Notifications -->
+    <div class="romantic-notifications" id="romanticNotifications"></div>
+
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/transitions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cursor.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+
+    <script>
+      // Initialize Barba.js for smooth transitions
+      Barba.Pjax.start();
+
+      Barba.Dispatcher.on(
+        "newPageReady",
+        function (currentStatus, oldStatus, container) {
+          // Re-initialize animations for new page
+          initializePageAnimations();
+        }
+      );
+
+      // Heartbeat loader
+      window.addEventListener("load", function () {
+        const loader = document.getElementById("heartbeatLoader");
+        anime({
+          targets: loader,
+          opacity: 0,
+          duration: 1000,
+          easing: "easeOutQuad",
+          complete: function () {
+            loader.style.display = "none";
+          },
+        });
+      });
+
+      // Initialize global features
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeCustomCursor();
+        startRomanticNotifications();
+        loadDailyQuote();
+        initializeButtonAnimations();
+
+        // Preserve music state
+        const music = document.getElementById("backgroundMusic");
+        const savedTime = localStorage.getItem("musicTime");
+        const savedState = localStorage.getItem("musicPlaying");
+
+        if (savedState === "true" && savedTime) {
+          music.currentTime = parseFloat(savedTime);
+          music.play().catch((e) => console.log("Auto-play prevented"));
+        }
+
+        // Save music state periodically
+        setInterval(() => {
+          localStorage.setItem("musicTime", music.currentTime);
+          localStorage.setItem("musicPlaying", !music.paused);
+        }, 1000);
+      });
+
+      function initializeButtonAnimations() {
+        // Add pulse animation to all buttons
+        document.querySelectorAll("button").forEach((button) => {
+          button.addEventListener("mouseenter", function () {
+            anime({
+              targets: this,
+              scale: 1.05,
+              boxShadow: "0 10px 25px rgba(255, 107, 107, 0.3)",
+              duration: 300,
+              easing: "easeOutQuad",
+            });
+          });
+
+          button.addEventListener("mouseleave", function () {
+            anime({
+              targets: this,
+              scale: 1,
+              boxShadow: "0 5px 15px rgba(255, 107, 107, 0.2)",
+              duration: 300,
+              easing: "easeOutQuad",
+            });
+          });
+        });
+      }
+
+      function loadDailyQuote() {
+        const quotes = [
+          "Aap meri duniya hain 💗",
+          "Har din aapke bina adhoora lagta hai 🌙",
+          "Pyaar ek aisi feeling hai jo shabdon mein bayaan nahi ho sakti 💫",
+          "Aapki yaadon ne mere dil ko ghar bana liya hai 🏠",
+          "Har pal aapke saath bitana chahta hoon ⏳",
+          "Aap ho to sab kuch hai, aap na ho to kuch bhi nahi ❤️",
+          "Meri khushiyon ka raaz sirf aap hain 🤫",
+          "Aapki muskurahat meri sabse khoobsurat tasveer hai 📸",
+        ];
+
+        const today = new Date().getDate();
+        const dailyQuote = quotes[today % quotes.length];
+        document.getElementById("dailyQuote").textContent = dailyQuote;
+      }
+
+      function shareLove(platform) {
+        const message =
+          "Check out this beautiful LoveLock I received! 💖 #LoveLock #Romantic";
+        const url = window.location.href;
+
+        switch (platform) {
+          case "twitter":
+            window.open(
+              `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                message
+              )}&url=${encodeURIComponent(url)}`,
+              "_blank"
+            );
+            break;
+          case "instagram":
+            alert(
+              "Share this LoveLock on Instagram! Capture a screenshot and post it with #LoveLock 💫"
+            );
+            break;
+          case "whatsapp":
+            window.open(
+              `https://wa.me/?text=${encodeURIComponent(message + " " + url)}`,
+              "_blank"
+            );
+            break;
+          case "copy":
+            navigator.clipboard.writeText(message + " " + url).then(() => {
+              showTemporaryNotification("Link copied to clipboard! 💖");
+            });
+            break;
+        }
+
+        // Heart animation on social buttons
+        anime({
+          targets: ".social-heart",
+          scale: [1, 1.3, 1],
+          duration: 600,
+          easing: "elastic.out(1, 0.5)",
+          delay: anime.stagger(100),
+        });
+      }
+
+      function showTemporaryNotification(message) {
+        const notification = document.createElement("div");
+        notification.className = "temp-notification";
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        anime({
+          targets: notification,
+          opacity: [0, 1],
+          translateY: [20, 0],
+          duration: 400,
+          easing: "easeOutQuad",
+          complete: function () {
+            setTimeout(() => {
+              anime({
+                targets: notification,
+                opacity: [1, 0],
+                translateY: [0, -20],
+                duration: 400,
+                easing: "easeInQuad",
+                complete: function () {
+                  notification.remove();
+                },
+              });
+            }, 2000);
+          },
+        });
+      }
+    </script>
+
+    <style>
+      /* Heartbeat Loader */
+      .heartbeat-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-family: "Dancing Script", cursive;
+        color: white;
+      }
+
+      .heartbeat-loader .heart-pulse {
+        font-size: 4em;
+        animation: heartbeat 1.5s ease-in-out infinite;
+        filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.5));
+      }
+
+      @keyframes heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+
+      /* Glassmorphism Navigation */
+      .glass-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        z-index: 1000;
+        padding: 15px 0;
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+      }
+
+      .nav-logo {
+        font-family: "Great Vibes", cursive;
+        font-size: 2em;
+        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 30px;
+      }
+
+      .nav-link {
+        color: #7a5c7c;
+        text-decoration: none;
+        font-family: "Playfair Display", serif;
+        font-size: 1.1em;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-link::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .nav-link:hover::before {
+        left: 100%;
+      }
+
+      .nav-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #ff6b6b;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.2);
+      }
+
+      .nav-icon {
+        font-size: 1.2em;
+        filter: drop-shadow(0 2px 4px rgba(255, 107, 107, 0.3));
+      }
+
+      /* Romantic Footer */
+      .romantic-footer {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 40px 20px;
+        margin-top: 50px;
+      }
+
+      .footer-separator {
+        margin-bottom: 30px;
+      }
+
+      .separator-svg {
+        width: 100%;
+        height: 30px;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 40px;
+        align-items: center;
+      }
+
+      .quote-of-day {
+        text-align: left;
+      }
+
+      .quote-of-day h3 {
+        font-family: "Dancing Script", cursive;
+        font-size: 1.8em;
+        color: #ff6b6b;
+        margin-bottom: 10px;
+      }
+
+      .quote-of-day p {
+        font-family: "Playfair Display", serif;
+        color: #7a5c7c;
+        font-style: italic;
+        margin: 0;
+      }
+
+      .social-hearts {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+      }
+
+      .social-heart {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 107, 107, 0.3);
+        padding: 12px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.3em;
+        transition: all 0.3s ease;
+        animation: floatSocial 3s ease-in-out infinite;
+      }
+
+      .social-heart:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .social-heart:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      .social-heart:nth-child(3) {
+        animation-delay: 1s;
+      }
+      .social-heart:nth-child(4) {
+        animation-delay: 1.5s;
+      }
+
+      @keyframes floatSocial {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .social-heart:hover {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        transform: scale(1.2) translateY(-5px);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+      }
+
+      .footer-message {
+        text-align: right;
+        font-family: "Dancing Script", cursive;
+        font-size: 1.4em;
+        color: #7a5c7c;
+      }
+
+      /* Custom Cursor */
+      .custom-cursor {
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle, #ff6b6b, #ff8e8e);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: difference;
+        transition: transform 0.1s ease;
+      }
+
+      .cursor-trail {
+        position: fixed;
+        pointer-events: none;
+        z-index: 9998;
+      }
+
+      .cursor-trail::before {
+        content: "💖";
+        position: absolute;
+        font-size: 12px;
+        opacity: 0.7;
+        animation: trailFade 1s ease-out forwards;
+      }
+
+      @keyframes trailFade {
+        0% {
+          opacity: 0.7;
+          transform: scale(1) translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0.5) translateY(-20px);
+        }
+      }
+
+      /* Romantic Notifications */
+      .romantic-notifications {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .romantic-notification {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 15px 20px;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 182, 193, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        font-family: "Dancing Script", cursive;
+        font-size: 1.3em;
+        color: #7a5c7c;
+        max-width: 300px;
+        animation: notificationSlideIn 0.5s ease;
+      }
+
+      @keyframes notificationSlideIn {
+        from {
+          opacity: 0;
+          transform: translateX(100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .temp-notification {
+        position: fixed;
+        bottom: 100px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        padding: 12px 20px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 182, 193, 0.3);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        font-family: "Playfair Display", serif;
+        color: #7a5c7c;
+        z-index: 1001;
+      }
+
+      /* Barba.js Transitions */
+      .barba-container {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.6s ease;
+      }
+
+      .barba-container--enter {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .barba-container--exit {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      /* Enhanced Button Styles */
+      button {
+        transition: all 0.3s ease !important;
+        position: relative;
+        overflow: hidden;
+      }
+
+      button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      button:hover::before {
+        left: 100%;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-container {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .nav-links {
+          gap: 15px;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .nav-link {
+          padding: 8px 15px;
+          font-size: 1em;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          text-align: center;
+        }
+
+        .quote-of-day,
+        .footer-message {
+          text-align: center;
+        }
+
+        .romantic-footer {
+          padding: 30px 15px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-logo {
+          font-size: 1.5em;
+        }
+
+        .nav-links {
+          gap: 10px;
+        }
+
+        .nav-link {
+          padding: 6px 12px;
+          font-size: 0.9em;
+        }
+
+        .social-hearts {
+          gap: 10px;
+        }
+
+        .social-heart {
+          padding: 8px;
+          font-size: 1.1em;
+        }
+      }
+
+      /* Enhanced button styles for all pages */
+      button {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.1em;
+        color: white;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Playfair Display", serif;
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      button:hover::before {
+        left: 100%;
+      }
+
+      button:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.5);
+      }
+    </style>
+  </body>
+</html>

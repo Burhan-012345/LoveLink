@@ -1,0 +1,338 @@
+{% extends "base.html" %} {% block content %}
+<div class="shayri-container">
+  <div class="shayri-header">
+    <h1 class="shayri-title">Dil Ki Shayri 💖</h1>
+    <p class="shayri-subtitle">Har shayri aapke liye, dil se likhi gayi</p>
+  </div>
+
+  <div class="shayri-viewer">
+    <div class="shayri-navigation">
+      <button class="shayri-nav-btn prev-shayri" onclick="navigateShayri(-1)">
+        ← Pichli
+      </button>
+      <div class="shayri-counter">
+        <span id="currentShayri">1</span> / <span id="totalShayris">12</span>
+      </div>
+      <button class="shayri-nav-btn next-shayri" onclick="navigateShayri(1)">
+        Agli →
+      </button>
+    </div>
+
+    <div class="shayri-content-container">
+      <div class="shayri-card" id="shayriCard">
+        <div class="shayri-text" id="shayriText">
+          Loading beautiful shayris... 💖
+        </div>
+        <div class="shayri-mood" id="shayriMood">Loading mood...</div>
+      </div>
+    </div>
+
+    <div class="shayri-actions">
+      <button class="action-btn" onclick="shareShayri()">
+        ❤️ Share This Shayri
+      </button>
+      <button class="action-btn" onclick="markFavorite()">
+        ⭐ Mark Favorite
+      </button>
+    </div>
+
+    <div class="shayri-categories">
+      <h3>Explore by Mood</h3>
+      <div class="category-tags">
+        <button class="category-tag active" data-category="all">Sabhi</button>
+        <button class="category-tag" data-category="romantic">Romantic</button>
+        <button class="category-tag" data-category="emotional">
+          Emotional
+        </button>
+        <button class="category-tag" data-category="promise">Promise</button>
+        <button class="category-tag" data-category="spiritual">
+          Spiritual
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="navigation-buttons">
+    <button class="nav-back" onclick="goToLetters()">← Wapas Letters</button>
+    <button class="nav-secret" onclick="goToSecret()">Secret Page 💫</button>
+  </div>
+</div>
+
+<script>
+  let currentShayriIndex = 0;
+  let allShayris = [];
+  let filteredShayris = [];
+
+  // Load shayris from API
+  fetch("{{ url_for('api_shayris') }}")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((shayris) => {
+      allShayris = shayris;
+      filteredShayris = [...allShayris];
+      document.getElementById("totalShayris").textContent = allShayris.length;
+      if (filteredShayris.length > 0) {
+        displayShayri(0);
+      } else {
+        document.getElementById("shayriText").textContent = "No shayris found.";
+        document.getElementById("shayriMood").textContent = "";
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading shayris:", error);
+      document.getElementById("shayriText").textContent =
+        "Error loading shayris. Please try again.";
+      document.getElementById("shayriMood").textContent = "";
+    });
+
+  function navigateShayri(direction) {
+    const newIndex = currentShayriIndex + direction;
+    if (newIndex >= 0 && newIndex < filteredShayris.length) {
+      displayShayri(newIndex);
+    } else if (filteredShayris.length > 0) {
+      // Loop around
+      displayShayri(direction > 0 ? 0 : filteredShayris.length - 1);
+    }
+  }
+
+  function displayShayri(index) {
+    if (filteredShayris.length === 0) return;
+
+    currentShayriIndex = index;
+    const shayri = filteredShayris[index];
+
+    // Update counter
+    document.getElementById("currentShayri").textContent = index + 1;
+    document.getElementById("totalShayris").textContent =
+      filteredShayris.length;
+
+    // Animate card out
+    const card = document.getElementById("shayriCard");
+    const textElement = document.getElementById("shayriText");
+    const moodElement = document.getElementById("shayriMood");
+
+    anime({
+      targets: card,
+      opacity: 0,
+      translateY: 30,
+      duration: 400,
+      easing: "easeOutQuad",
+      complete: function () {
+        // Update content
+        textElement.innerHTML = shayri.content.replace(/\n/g, "<br>");
+        moodElement.textContent = shayri.mood ? `Mood: ${shayri.mood}` : "";
+
+        // Animate card in
+        anime({
+          targets: card,
+          opacity: 1,
+          translateY: 0,
+          duration: 600,
+          easing: "easeOutQuad",
+        });
+
+        // Typing effect for shayri text
+        typeShayriText(textElement, shayri.content);
+      },
+    });
+  }
+
+  function typeShayriText(element, text) {
+    const originalText = element.innerHTML;
+    element.textContent = "";
+
+    let i = 0;
+    const typing = setInterval(() => {
+      if (i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(typing);
+        // Restore line breaks after typing
+        element.innerHTML = originalText;
+      }
+    }, 30);
+  }
+
+  function shareShayri() {
+    if (filteredShayris.length === 0) return;
+
+    const currentShayri = filteredShayris[currentShayriIndex];
+    if (navigator.share) {
+      navigator.share({
+        title: "LoveLock Shayri",
+        text: currentShayri.content,
+        url: window.location.href,
+      });
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard
+        .writeText(currentShayri.content)
+        .then(() => {
+          alert("Shayri copied to clipboard! ❤️");
+        })
+        .catch(() => {
+          alert("Shayri ready to share! ❤️");
+        });
+    }
+  }
+
+  function markFavorite() {
+    if (filteredShayris.length === 0) return;
+
+    const currentShayri = filteredShayris[currentShayriIndex];
+    // Add to favorites (you can implement local storage or API call)
+    let favorites = JSON.parse(localStorage.getItem("favoriteShayris") || "[]");
+
+    if (!favorites.includes(currentShayri.id)) {
+      favorites.push(currentShayri.id);
+      localStorage.setItem("favoriteShayris", JSON.stringify(favorites));
+
+      // Show confirmation animation
+      anime({
+        targets: ".action-btn:nth-child(2)",
+        scale: [1, 1.2, 1],
+        duration: 600,
+        easing: "elastic.out(1, 0.5)",
+      });
+
+      alert("Added to favorites! ⭐");
+    } else {
+      alert("Already in favorites! 💫");
+    }
+  }
+
+  // Category filtering
+  document.querySelectorAll(".category-tag").forEach((tag) => {
+    tag.addEventListener("click", function () {
+      // Update active tag
+      document
+        .querySelectorAll(".category-tag")
+        .forEach((t) => t.classList.remove("active"));
+      this.classList.add("active");
+
+      const category = this.dataset.category;
+
+      if (category === "all") {
+        filteredShayris = [...allShayris];
+      } else {
+        filteredShayris = allShayris.filter(
+          (shayri) => shayri.category === category
+        );
+      }
+
+      // Reset to first shayri in filtered list
+      currentShayriIndex = 0;
+      if (filteredShayris.length > 0) {
+        displayShayri(0);
+      } else {
+        document.getElementById("shayriText").textContent =
+          "No shayris in this category.";
+        document.getElementById("shayriMood").textContent = "";
+        document.getElementById("currentShayri").textContent = "0";
+      }
+    });
+  });
+
+  function goToLetters() {
+    transitionToPage("{{ url_for('letters') }}");
+  }
+
+  function goToSecret() {
+    transitionToPage("{{ url_for('secret') }}");
+  }
+
+  function transitionToPage(url) {
+    anime({
+      targets: ".shayri-container",
+      opacity: 0,
+      scale: 0.9,
+      duration: 800,
+      easing: "easeInOutQuad",
+      complete: function () {
+        window.location.href = url;
+      },
+    });
+  }
+
+  // Keyboard navigation
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") {
+      navigateShayri(-1);
+    } else if (e.key === "ArrowRight") {
+      navigateShayri(1);
+    }
+  });
+
+  // Auto-advance every 45 seconds
+  let autoAdvanceInterval;
+  function startAutoAdvance() {
+    autoAdvanceInterval = setInterval(() => {
+      if (filteredShayris.length > 0) {
+        navigateShayri(1);
+      }
+    }, 45000);
+  }
+
+  // Start auto-advance
+  startAutoAdvance();
+
+  // Reset auto-advance on user interaction
+  document.addEventListener("click", function () {
+    clearInterval(autoAdvanceInterval);
+    startAutoAdvance();
+  });
+
+  document.addEventListener("keydown", function () {
+    clearInterval(autoAdvanceInterval);
+    startAutoAdvance();
+  });
+</script>
+
+<style>
+  /* Enhanced button styles for all pages */
+  button {
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Playfair Display", serif;
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
+  button:hover::before {
+    left: 100%;
+  }
+
+  button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(255, 107, 107, 0.5);
+  }
+</style>
+{% endblock %}
